@@ -1,5 +1,7 @@
 # 雲科 TronClass 課程活動
 
+[開啟書籤安裝網站](https://tw-rf54732.github.io/tronclass-calender/)
+
 ## 安裝 bookmarklet
 
 用瀏覽器開啟 `index.html`，把「雲科課程活動」膠囊拖到書籤列。也可以展開「無法拖曳？手動加入書籤」，複製完整書籤網址。`install-bookmarklet.html` 提供相同的安裝頁。
