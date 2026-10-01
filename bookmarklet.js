@@ -11,9 +11,9 @@
     return;
   }
 
-  const knownTypes = ["forum", "homework", "material", "online_video", "page", "questionnaire", "web_link"];
+  const knownTypes = ["exam", "forum", "homework", "material", "online_video", "page", "questionnaire", "web_link"];
   const typeNames = {
-    forum: "討論區", homework: "作業", material: "教材", online_video: "影片",
+    exam: "測驗", forum: "討論區", homework: "作業", material: "教材", online_video: "影片",
     page: "頁面", questionnaire: "問卷", web_link: "連結",
   };
   const controller = new AbortController();
@@ -219,8 +219,14 @@
     const values = [
       ["課程", activity.course_name], ["類型", activity.type], ["活動 ID", activity.id],
       ["開始", formatTime(activity.start_time)], ["截止", formatTime(activity.deadline)],
-      ["結束", formatTime(activity.end_time)], ["發布", formatTime(activity.data?.publish_time)],
-      ["成績公布", formatTime(activity.data?.announce_score_time)],
+      ["結束", formatTime(activity.end_time)], ["發布", formatTime(activity.data?.publish_time ?? activity.publish_time)],
+      ["成績公布", formatTime(activity.data?.announce_score_time ?? activity.announce_score_time)],
+      ...(activity.activity_source === "exam-list" ? [
+        ["作答限時（limit_time）", activity.limit_time ?? "—"],
+        ["可作答次數", activity.submit_times ?? "—"],
+        ["已繳交次數", activity.submission_count ?? "—"],
+        ["總題數", activity.subjects_count ?? "—"],
+      ] : []),
       ["互評開始", formatTime(activity.inter_score_map?.start_time)],
       ["互評結束", formatTime(activity.inter_score_map?.end_time)],
       ["組內評分開始", formatTime(activity.intra_score_map?.start_time)],
@@ -233,7 +239,9 @@
       typeof activity.data?.description === "string" ? activity.data.description : "",
     ));
     const link = node("a", "開啟活動頁面 ↗");
-    link.href = `/course/${activity.course_id}/learning-activity#/${activity.id}`;
+    link.href = activity.activity_source === "exam-list"
+      ? `/course/${activity.course_id}/exam#/${activity.id}`
+      : `/course/${activity.course_id}/learning-activity#/${activity.id}`;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
     detail.replaceChildren(heading, list, description, link);
@@ -430,17 +438,47 @@
       const failures = [];
       render();
       for (const [index, course] of courses.entries()) {
-        $(".status").textContent = `讀取活動 ${index + 1}/${courses.length}：${course.display_name}`;
+        $(".status").textContent = `讀取活動與測驗 ${index + 1}/${courses.length}：${course.display_name}`;
         try {
-          const data = await request(`/api/courses/${course.id}/activities?sub_course_id=0`);
-          if (!Array.isArray(data.activities)) throw new Error("回應沒有 activities 陣列");
-          for (const activity of data.activities) {
+          const [activityData, examData] = await Promise.all([
+            request(`/api/courses/${course.id}/activities?sub_course_id=0`),
+            (async () => {
+              const exams = [];
+              let examPages = 1;
+              for (let page = 1; page <= examPages; page++) {
+                const params = new URLSearchParams({
+                  conditions: JSON.stringify({ itemsSortBy: { predicate: "module", reverse: false } }),
+                  page: String(page),
+                  page_size: "20",
+                  reloadPage: "false",
+                });
+                const result = await request(`/api/courses/${course.id}/exam-list?${params}`);
+                if (!Array.isArray(result.exams) || !Number.isInteger(result.pages) || result.pages < 0) {
+                  throw new Error("測驗清單格式不符合預期");
+                }
+                exams.push(...result.exams);
+                examPages = result.pages;
+              }
+              return exams;
+            })(),
+          ]);
+          if (!Array.isArray(activityData.activities)) throw new Error("活動回應沒有 activities 陣列");
+          for (const activity of activityData.activities) {
             const type = activity.type ?? "unknown";
             activities.push({ ...activity, type, course_id: course.id, course_name: course.display_name });
             if (!availableTypes.has(type)) {
               availableTypes.add(type);
               selectedTypes.add(type);
             }
+          }
+          for (const exam of examData) {
+            activities.push({
+              ...exam,
+              type: "exam",
+              activity_source: "exam-list",
+              course_id: course.id,
+              course_name: course.display_name,
+            });
           }
         } catch (error) {
           if (controller.signal.aborted) throw error;
