@@ -1,58 +1,94 @@
-"""產生不依賴外部網站或套件的 bookmarklet 與安裝頁。"""
+"""把 bookmarklet 原始碼編入靜態安裝頁，可從 Git tags 重建歷史版本。"""
 
+import argparse
+import json
+import re
+import subprocess
 from html import escape
 from pathlib import Path
 from urllib.parse import quote
 
-root = Path(__file__).resolve().parent
-source = (root / "bookmarklet.js").read_text(encoding="utf-8")
-bookmarklet = "javascript:" + quote(source, safe="")
-(root / "bookmarklet.txt").write_text(bookmarklet + "\n", encoding="utf-8")
+ROOT = Path(__file__).resolve().parent
+TEMPLATE = (ROOT / "site-template.html").read_text(encoding="utf-8")
+TAG_PATTERN = re.compile(r"v[A-Za-z0-9._-]*\Z")
 
-page = """<!doctype html>
-<html lang="zh-Hant">
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>雲科 TronClass 課程活動書籤</title>
-<style>
-  body { max-width:760px; margin:56px auto; padding:0 24px; font:16px/1.7 system-ui,sans-serif; color:#182a3b; background:#f6f8fb; }
-  main { padding:28px; background:white; border:1px solid #dce4ed; border-radius:14px; }
-  h1 { margin-top:0; font-size:26px; } h2 { font-size:18px; }
-  .bookmark { display:inline-block; padding:12px 20px; background:#1667c7; color:#fff; border-radius:8px; text-decoration:none; font-weight:600; }
-  textarea { width:100%; height:100px; box-sizing:border-box; padding:8px; border:1px solid #c5d2df; border-radius:6px; }
-  button { padding:8px 14px; font:inherit; cursor:pointer; } .muted { color:#607184; }
-</style>
-<main>
-  <h1>TronClass 課程活動</h1>
-  <p>查看最新學年度的課程活動，複選活動類型，切換表格與月曆。</p>
-  <p><a class="bookmark" href="__BOOKMARKLET__">雲科課程活動</a></p>
-  <ol>
-    <li>把上方「雲科課程活動」拖到瀏覽器的書籤列。</li>
-    <li>開啟 <a href="https://eclass.yuntech.edu.tw" target="_blank" rel="noopener noreferrer">雲科 TronClass</a> 並登入。</li>
-    <li>在 TronClass 網頁點擊書籤，開啟活動面板。</li>
-  </ol>
-  <p class="muted">所有時間顯示為台灣時間。課程查詢沿用 ongoing／notStarted 與最近開始的條件，抓完分頁後取最大的 academic_year_id。月曆顯示活動與評分時段的開始、截止、結束；沒有時間的活動可在表格查看。</p>
-  <h2>手動建立書籤</h2>
-  <p>新增一個書籤，名稱可填「雲科課程活動」，網址貼入以下完整內容（包含 javascript:）。</p>
-  <textarea id="code" readonly aria-label="完整書籤網址" spellcheck="false">__CODE__</textarea>
-  <button id="copy" type="button">複製書籤網址</button>
-  <span id="status" role="status"></span>
-</main>
-<script>
-  document.getElementById('copy').addEventListener('click', async () => {
-    const code = document.getElementById('code');
-    code.focus();
-    code.select();
-    try {
-      await navigator.clipboard.writeText(code.value);
-      document.getElementById('status').textContent = '已複製';
-    } catch {
-      document.getElementById('status').textContent = '內容已選取，請按 Ctrl+C（Mac：⌘C）複製。';
+
+def git(*args):
+    return subprocess.check_output(
+        ["git", *args], cwd=ROOT, text=True, encoding="utf-8"
+    ).strip()
+
+
+def bookmarklet_url(source):
+    return "javascript:" + quote(source, safe="")
+
+
+def write_page(output, source, version, releases, prefix=""):
+    output.mkdir(parents=True, exist_ok=True)
+    url = bookmarklet_url(source)
+    links = "".join(
+        f'<a href="{escape(prefix + release["path"], quote=True)}">{escape(release["version"])}</a>'
+        for release in releases
+    ) or "<span>尚無發布版本</span>"
+    replacements = {
+        "__BOOKMARKLET__": escape(url, quote=True),
+        "__CODE__": escape(url),
+        "__VERSION__": escape(version),
+        "__VERSIONS__": links,
     }
-  });
-</script>
-</html>
-"""
-page = page.replace("__BOOKMARKLET__", escape(bookmarklet, quote=True)).replace("__CODE__", escape(bookmarklet))
-(root / "install-bookmarklet.html").write_text(page, encoding="utf-8")
-print("Generated bookmarklet.txt and install-bookmarklet.html")
+    page = TEMPLATE
+    for placeholder, value in replacements.items():
+        page = page.replace(placeholder, value)
+    (output / "index.html").write_text(page, encoding="utf-8")
+    (output / "install-bookmarklet.html").write_text(page, encoding="utf-8")
+    (output / "bookmarklet.txt").write_text(url + "\n", encoding="utf-8")
+
+
+def build(output, version, include_tags=False):
+    if version != "開發版" and not TAG_PATTERN.fullmatch(version):
+        raise ValueError("版本 tag 請使用 v 開頭的英文、數字、句點、底線或連字號，例如 v1.0.0")
+    source = (ROOT / "bookmarklet.js").read_text(encoding="utf-8")
+    releases = []
+    snapshots = {}
+    if include_tags:
+        for tag in git("tag", "--list", "v*", "--sort=-version:refname").splitlines():
+            if not TAG_PATTERN.fullmatch(tag):
+                print(f"Skip unsupported tag name: {tag}")
+                continue
+            # 尚未有 bookmarklet.js 的早期 tag 不列為可安裝版本。
+            files = git("ls-tree", "--name-only", tag, "bookmarklet.js").splitlines()
+            if "bookmarklet.js" not in files:
+                continue
+            snapshots[tag] = git("show", f"{tag}:bookmarklet.js") + "\n"
+            releases.append({
+                "version": tag,
+                "path": f"releases/{tag}/",
+                "commit": git("rev-parse", f"{tag}^{{commit}}"),
+                "sourceCommittedAt": git("log", "-1", "--format=%cI", f"{tag}^{{commit}}"),
+            })
+        if version not in snapshots:
+            raise ValueError(f"找不到 {version} 的 bookmarklet.js；請確認 tag 已建立且包含原始碼")
+        # 首頁永遠編入觸發部署的 tag 原始碼。
+        source = snapshots[version]
+    write_page(output, source, version, releases)
+    for release in releases:
+        write_page(output / release["path"], snapshots[release["version"]], release["version"], releases, "../../")
+    manifest = {
+        "schemaVersion": 1,
+        "latest": version,
+        "releases": releases,
+    }
+    (output / "versions.json").write_text(
+        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8"
+    )
+    (output / ".nojekyll").write_text("", encoding="utf-8")
+    print(f"Built {version}: {output} ({len(releases)} archived releases)")
+
+
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--output", type=Path, default=ROOT)
+    parser.add_argument("--version", default="開發版")
+    parser.add_argument("--include-tags", action="store_true")
+    args = parser.parse_args()
+    build(args.output.resolve(), args.version, args.include_tags)
