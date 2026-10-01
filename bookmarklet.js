@@ -69,9 +69,13 @@
       .event.start { background:#eaf3ff; border-color:#bcd5f5; border-left-color:#2872c7; }
       .event.end { background:#fff0f1; border-color:#efbdc2; border-left-color:#bf4956; }
       .event-course { display:block; font-size:11px; color:#637386; }
-      .detail { margin:0 24px 12px; padding:12px; border:1px solid #bfd3e8; border-radius:8px; background:#f7fbff; max-height:240px; overflow:auto; }
+      .detail { margin:0 24px 12px; padding:12px; border:1px solid #bfd3e8; border-radius:8px; background:#f7fbff; max-height:45vh; flex-shrink:0; overflow:auto; }
       .detail dl { display:grid; grid-template-columns:100px 1fr; gap:4px 10px; margin:10px 0; }
       .detail dt { color:#607184; } .detail dd { margin:0; overflow-wrap:anywhere; }
+      .description { margin:12px 0; padding:12px; background:#fff; border:1px solid #dce4ed; border-radius:6px; overflow-wrap:anywhere; }
+      .description h3 { margin:0 0 8px; font-size:14px; }
+      .description p { margin:6px 0; } .description pre { white-space:pre-wrap; }
+      .description th { position:static; }
       a { color:#155eb2; }
       [hidden] { display:none !important; }
       @media(max-width:650px) {
@@ -167,6 +171,45 @@
     }
   }
 
+  function renderDescription(html) {
+    const content = node("div");
+    // 保留說明的基本排版與連結，不把 API 提供的事件或腳本帶進登入頁。
+    const parsed = new DOMParser().parseFromString(html, "text/html");
+    const allowed = new Set(["P", "DIV", "SPAN", "STRONG", "EM", "B", "I", "U", "S", "BR", "UL", "OL", "LI", "BLOCKQUOTE", "PRE", "CODE", "TABLE", "THEAD", "TBODY", "TFOOT", "TR", "TH", "TD", "H1", "H2", "H3", "H4", "A"]);
+    const blocked = new Set(["SCRIPT", "STYLE", "IFRAME", "OBJECT", "EMBED", "LINK", "META", "BASE", "TEMPLATE"]);
+    const copy = (source, destination) => {
+      if (source.nodeType === 3) {
+        destination.append(document.createTextNode(source.textContent));
+        return;
+      }
+      if (source.nodeType !== 1 || blocked.has(source.tagName)) return;
+      if (source.tagName === "IMG") {
+        if (source.getAttribute("alt")) destination.append(document.createTextNode(source.getAttribute("alt")));
+        return;
+      }
+      if (!allowed.has(source.tagName)) {
+        for (const child of source.childNodes) copy(child, destination);
+        return;
+      }
+      const element = node(source.tagName.toLowerCase());
+      if (source.tagName === "A") {
+        try {
+          const url = new URL(source.getAttribute("href") || "", location.origin);
+          if (["https:", "http:", "mailto:"].includes(url.protocol)) {
+            element.href = url.href;
+            element.target = "_blank";
+            element.rel = "noopener noreferrer";
+          }
+        } catch { /* 無效網址仍顯示連結文字。 */ }
+      }
+      for (const child of source.childNodes) copy(child, element);
+      destination.append(element);
+    };
+    for (const child of parsed.body.childNodes) copy(child, content);
+    if (!content.textContent.trim()) content.textContent = "此活動沒有說明。";
+    return content;
+  }
+
   function showDetail(activity) {
     const detail = $(".detail");
     detail.hidden = false;
@@ -185,11 +228,15 @@
       ["API 狀態", `published=${activity.published ?? "—"} / is_started=${activity.is_started ?? "—"} / is_closed=${activity.is_closed ?? "—"}`],
     ];
     for (const [label, value] of values) list.append(node("dt", label), node("dd", String(value ?? "—")));
-    const link = node("a", "開啟課程內容 ↗");
-    link.href = `/course/${activity.course_id}/content`;
+    const description = node("section", undefined, "description");
+    description.append(node("h3", "活動說明"), renderDescription(
+      typeof activity.data?.description === "string" ? activity.data.description : "",
+    ));
+    const link = node("a", "開啟活動頁面 ↗");
+    link.href = `/course/${activity.course_id}/learning-activity#/${activity.id}`;
     link.target = "_blank";
     link.rel = "noopener noreferrer";
-    detail.replaceChildren(heading, list, link);
+    detail.replaceChildren(heading, list, description, link);
   }
 
   function getFiltered() {
