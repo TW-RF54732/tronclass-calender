@@ -8,6 +8,7 @@
 - `reports/`：比較報告、格式化 JSON 與欄位結構。(棄用，資料摘要於notes)
 - `notes/`：分析結論與研究筆記。
 - `compare.py`：JSON 比較工具，只需 Python 3。
+- [scripts/](scripts/README.md)：使用 eclassa URL 與手動 X-SESSION-ID 的 API 請求腳本。
 
 ## 分析筆記
 
