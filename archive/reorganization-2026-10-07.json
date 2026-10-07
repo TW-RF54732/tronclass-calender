@@ -1,0 +1,102 @@
+[
+  {
+    "from": "my-courses.js",
+    "to": "archive/desktop/scripts/my-courses.js",
+    "sha256": "bdbf47b481ccabefc5dd306c5b3e23de45aba4cb014fbc4ddbda1f0b0a83f645"
+  },
+  {
+    "from": "course-activities.js",
+    "to": "archive/desktop/scripts/course-activities.js",
+    "sha256": "b5e0ae3aa0b13dd0e095582ea667462c2a82c241c3649e294339dd8ed3258fd2"
+  },
+  {
+    "from": "all-course-activities.js",
+    "to": "archive/desktop/scripts/all-course-activities.js",
+    "sha256": "8eeab920b34012b6854ac2ec18b4412b9674550de887c2b58c1173ad73ec4937"
+  },
+  {
+    "from": "activity-types.js",
+    "to": "archive/desktop/scripts/activity-types.js",
+    "sha256": "7236f187e8c00a16f5fc87caa1d0db8fa23b294609df16f13d1be44e961f1e47"
+  },
+  {
+    "from": "my-courses-payload.json",
+    "to": "archive/desktop/data/my-courses-payload.json",
+    "sha256": "6d31db3b65d2490a76e46e2a8091645b5c2cf0b2646842d99df2a7b85555b975"
+  },
+  {
+    "from": "activities-payload.json",
+    "to": "archive/desktop/data/activities-payload.json",
+    "sha256": "e3d6b706bac81409099a96141de704912eb359712183416ceb5d3aa217871310"
+  },
+  {
+    "from": "exam-list-payload.json",
+    "to": "archive/desktop/data/exam-list-payload.json",
+    "sha256": "94fc575012c4838cd731857768f31e1cb236b5c2e21ae634e86340783ac9f871"
+  },
+  {
+    "from": "activities-analysis.md",
+    "to": "archive/desktop/notes/activities-analysis.md",
+    "sha256": "a11bc91f4328bb6655e7532de3a06db42f1bc565fbbc0fad0cee7e3476621b35"
+  },
+  {
+    "from": "bookmarklet.js",
+    "to": "services/calendar/src/bookmarklet.js",
+    "sha256": "6cd956d7bd256ab4ed9a5aca681cc52ed21ee5911b5e5d1c343c9b35df3a0eae"
+  },
+  {
+    "from": "tronclass-calendar.user.js",
+    "to": "services/calendar/src/tronclass-calendar.user.js",
+    "sha256": "1e29bd0d7262f86fedc07bf2ad18c4d8ae26b92e0fd79b82bc6a20a4cf58e833"
+  },
+  {
+    "from": "site-template.html",
+    "to": "services/calendar/templates/site-template.html",
+    "sha256": "fb429af6eac3b37f51c4de3b8c3d4a6d3c8feb96c2c0ead121eae48953594a11"
+  },
+  {
+    "from": "build-bookmarklet.py",
+    "to": "services/calendar/tools/build-bookmarklet.py",
+    "sha256": "5365c767a8b43351e1cb66d7a2a9d03eae861e89649532d8a57415b0df82b93b"
+  },
+  {
+    "from": "index.html",
+    "to": "services/calendar/public/index.html",
+    "sha256": "da23e72e88d655212a178e0ecd5bc5504bd9fcfd138ce2ca9460c9fcc336b7ce"
+  },
+  {
+    "from": "install-bookmarklet.html",
+    "to": "services/calendar/public/install-bookmarklet.html",
+    "sha256": "da23e72e88d655212a178e0ecd5bc5504bd9fcfd138ce2ca9460c9fcc336b7ce"
+  },
+  {
+    "from": "bookmarklet.txt",
+    "to": "services/calendar/public/bookmarklet.txt",
+    "sha256": "5e33395332b088ce671672cdc5c3415f1bbc200222688219dacf82772aaaef1f"
+  },
+  {
+    "from": "versions.json",
+    "to": "services/calendar/public/versions.json",
+    "sha256": "ff87f2741c0abd5ebdad3e0c24c016df395ab9dc0271d0e90e9626bb05ac5da5"
+  },
+  {
+    "from": ".nojekyll",
+    "to": "services/calendar/public/.nojekyll",
+    "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+  },
+  {
+    "from": "analyze/PC",
+    "to": "analyze/captures/PC",
+    "sha256": "217bbcc24d021fcc74e3d9b7ea6731a947d6646f15980f9f4fa0fe111916018d"
+  },
+  {
+    "from": "analyze/mobile",
+    "to": "analyze/captures/mobile",
+    "sha256": "a671d4fbb021b0c82117ea18c2d1babe731f0d9132348a5807b744f83d5083e4"
+  },
+  {
+    "from": "README.md",
+    "to": "services/calendar/README.md",
+    "sha256": "682d86e2a76fd499da3e098c42362df8f03c75886a8b8e7144ce782260a1ed01"
+  }
+]

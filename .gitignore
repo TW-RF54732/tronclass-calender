@@ -1,3 +1,9 @@
 /dist/
 __pycache__/
 *payload*.json
+
+# 本機 API 擷取與衍生報告（可能包含驗證資訊及個資）
+/analyze/captures/*
+!/analyze/captures/README.md
+/analyze/reports/*
+!/analyze/reports/README.md
