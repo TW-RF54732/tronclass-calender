@@ -81,7 +81,7 @@
 
 ## 與舊版活動樣本的變化
 
-對照 [舊版 JSON](../../archive/desktop/data/activities-payload.json)，這些是不同快照間的資料變化，不是 PC/mobile 差異：
+對照 [舊版 JSON](../../legacy/archive/desktop/data/activities-payload.json)，這些是不同快照間的資料變化，不是 PC/mobile 差異：
 
 - 活動由 20 筆增加至 21 筆：新增 `892928`，`material`，標題為 `Week 4 Slides`，三個主要活動時間皆為 null。
 - 討論區 `888929` 的 end_time 從台灣時間 09/24 12:00 改為 10/08 12:00。

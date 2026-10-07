@@ -1,0 +1,126 @@
+{
+  "date": "2026-10-07",
+  "source_commit": "2c39a7e676f626fbfdb288840635f907048f53d4",
+  "files": [
+    {
+      "source": "services/calendar/README.md",
+      "destination": "legacy/calendar/README.md",
+      "original_sha256": "cc19a87b10098cd71f9b96ef62a78e4e5f040205a6f84c5081d83910c2954271",
+      "destination_sha256": "065d9a2bb336f7f22b2d7ff9c3a1e687bcdf17b2590446cc90f10021ae3a34ca"
+    },
+    {
+      "source": "services/calendar/src/bookmarklet.js",
+      "destination": "legacy/calendar/src/bookmarklet.js",
+      "original_sha256": "6cd956d7bd256ab4ed9a5aca681cc52ed21ee5911b5e5d1c343c9b35df3a0eae",
+      "destination_sha256": "6cd956d7bd256ab4ed9a5aca681cc52ed21ee5911b5e5d1c343c9b35df3a0eae"
+    },
+    {
+      "source": "services/calendar/src/tronclass-calendar.user.js",
+      "destination": "legacy/calendar/src/tronclass-calendar.user.js",
+      "original_sha256": "1e29bd0d7262f86fedc07bf2ad18c4d8ae26b92e0fd79b82bc6a20a4cf58e833",
+      "destination_sha256": "1e29bd0d7262f86fedc07bf2ad18c4d8ae26b92e0fd79b82bc6a20a4cf58e833"
+    },
+    {
+      "source": "services/calendar/templates/site-template.html",
+      "destination": "legacy/calendar/templates/site-template.html",
+      "original_sha256": "fb429af6eac3b37f51c4de3b8c3d4a6d3c8feb96c2c0ead121eae48953594a11",
+      "destination_sha256": "fb429af6eac3b37f51c4de3b8c3d4a6d3c8feb96c2c0ead121eae48953594a11"
+    },
+    {
+      "source": "services/calendar/tools/build-bookmarklet.py",
+      "destination": "legacy/calendar/tools/build-bookmarklet.py",
+      "original_sha256": "1a17ecd04681750a3f7f0af57f962ce849b1ad1a10c535cfb86b031895be92d3",
+      "destination_sha256": "c299ecdf80a77d320fc4cec56c235450044968a18882951a382d6c188d812040"
+    },
+    {
+      "source": "services/calendar/public/index.html",
+      "destination": "legacy/calendar/public/index.html",
+      "original_sha256": "da23e72e88d655212a178e0ecd5bc5504bd9fcfd138ce2ca9460c9fcc336b7ce",
+      "destination_sha256": "da23e72e88d655212a178e0ecd5bc5504bd9fcfd138ce2ca9460c9fcc336b7ce"
+    },
+    {
+      "source": "services/calendar/public/install-bookmarklet.html",
+      "destination": "legacy/calendar/public/install-bookmarklet.html",
+      "original_sha256": "da23e72e88d655212a178e0ecd5bc5504bd9fcfd138ce2ca9460c9fcc336b7ce",
+      "destination_sha256": "da23e72e88d655212a178e0ecd5bc5504bd9fcfd138ce2ca9460c9fcc336b7ce"
+    },
+    {
+      "source": "services/calendar/public/bookmarklet.txt",
+      "destination": "legacy/calendar/public/bookmarklet.txt",
+      "original_sha256": "5e33395332b088ce671672cdc5c3415f1bbc200222688219dacf82772aaaef1f",
+      "destination_sha256": "5e33395332b088ce671672cdc5c3415f1bbc200222688219dacf82772aaaef1f"
+    },
+    {
+      "source": "services/calendar/public/versions.json",
+      "destination": "legacy/calendar/public/versions.json",
+      "original_sha256": "ff87f2741c0abd5ebdad3e0c24c016df395ab9dc0271d0e90e9626bb05ac5da5",
+      "destination_sha256": "ff87f2741c0abd5ebdad3e0c24c016df395ab9dc0271d0e90e9626bb05ac5da5"
+    },
+    {
+      "source": "services/calendar/public/.nojekyll",
+      "destination": "legacy/calendar/public/.nojekyll",
+      "original_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "destination_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "source": "archive/reorganization-2026-10-07.json",
+      "destination": "legacy/archive/reorganization-2026-10-07.json",
+      "original_sha256": "e73718ea81540eae84f810c74e678fb167a131f6837d40a267a47d844016045c",
+      "destination_sha256": "e73718ea81540eae84f810c74e678fb167a131f6837d40a267a47d844016045c"
+    },
+    {
+      "source": "archive/desktop/scripts/my-courses.js",
+      "destination": "legacy/archive/desktop/scripts/my-courses.js",
+      "original_sha256": "bdbf47b481ccabefc5dd306c5b3e23de45aba4cb014fbc4ddbda1f0b0a83f645",
+      "destination_sha256": "bdbf47b481ccabefc5dd306c5b3e23de45aba4cb014fbc4ddbda1f0b0a83f645"
+    },
+    {
+      "source": "archive/desktop/scripts/course-activities.js",
+      "destination": "legacy/archive/desktop/scripts/course-activities.js",
+      "original_sha256": "b5e0ae3aa0b13dd0e095582ea667462c2a82c241c3649e294339dd8ed3258fd2",
+      "destination_sha256": "b5e0ae3aa0b13dd0e095582ea667462c2a82c241c3649e294339dd8ed3258fd2"
+    },
+    {
+      "source": "archive/desktop/scripts/all-course-activities.js",
+      "destination": "legacy/archive/desktop/scripts/all-course-activities.js",
+      "original_sha256": "8eeab920b34012b6854ac2ec18b4412b9674550de887c2b58c1173ad73ec4937",
+      "destination_sha256": "8eeab920b34012b6854ac2ec18b4412b9674550de887c2b58c1173ad73ec4937"
+    },
+    {
+      "source": "archive/desktop/scripts/activity-types.js",
+      "destination": "legacy/archive/desktop/scripts/activity-types.js",
+      "original_sha256": "7236f187e8c00a16f5fc87caa1d0db8fa23b294609df16f13d1be44e961f1e47",
+      "destination_sha256": "7236f187e8c00a16f5fc87caa1d0db8fa23b294609df16f13d1be44e961f1e47"
+    },
+    {
+      "source": "archive/desktop/data/my-courses-payload.json",
+      "destination": "legacy/archive/desktop/data/my-courses-payload.json",
+      "original_sha256": "6d31db3b65d2490a76e46e2a8091645b5c2cf0b2646842d99df2a7b85555b975",
+      "destination_sha256": "6d31db3b65d2490a76e46e2a8091645b5c2cf0b2646842d99df2a7b85555b975"
+    },
+    {
+      "source": "archive/desktop/data/activities-payload.json",
+      "destination": "legacy/archive/desktop/data/activities-payload.json",
+      "original_sha256": "e3d6b706bac81409099a96141de704912eb359712183416ceb5d3aa217871310",
+      "destination_sha256": "e3d6b706bac81409099a96141de704912eb359712183416ceb5d3aa217871310"
+    },
+    {
+      "source": "archive/desktop/data/exam-list-payload.json",
+      "destination": "legacy/archive/desktop/data/exam-list-payload.json",
+      "original_sha256": "94fc575012c4838cd731857768f31e1cb236b5c2e21ae634e86340783ac9f871",
+      "destination_sha256": "94fc575012c4838cd731857768f31e1cb236b5c2e21ae634e86340783ac9f871"
+    },
+    {
+      "source": "archive/desktop/notes/activities-analysis.md",
+      "destination": "legacy/archive/desktop/notes/activities-analysis.md",
+      "original_sha256": "a11bc91f4328bb6655e7532de3a06db42f1bc565fbbc0fad0cee7e3476621b35",
+      "destination_sha256": "a11bc91f4328bb6655e7532de3a06db42f1bc565fbbc0fad0cee7e3476621b35"
+    },
+    {
+      "source": "services/worker/README.md",
+      "destination": "service/README.md",
+      "original_sha256": "4b1ad37f830b3015413035f3e48d7930ea3d73f63c67c25593a9058663a8b3e8",
+      "destination_sha256": "847d6d0b5bdc93b376979e3b44b1c6819c30f23d87c31ee8a1e5d46ebf1dc2d2"
+    }
+  ]
+}

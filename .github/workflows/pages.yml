@@ -34,7 +34,7 @@ jobs:
       - name: Build latest install page and archived versions
         env:
           RELEASE_TAG: ${{ github.ref_name }}
-        run: python services/calendar/tools/build-bookmarklet.py --output dist --version "$RELEASE_TAG" --include-tags
+        run: python legacy/calendar/tools/build-bookmarklet.py --output dist --version "$RELEASE_TAG" --include-tags
 
       - name: Upload static website
         uses: actions/upload-pages-artifact@v4

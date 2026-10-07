@@ -7,3 +7,17 @@ __pycache__/
 !/analyze/captures/README.md
 /analyze/reports/*
 !/analyze/reports/README.md
+
+# 開發環境與個人部署設定
+/.venv/
+node_modules/
+.wrangler/
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+!.dev.vars.example
+*.pem
+*.key
+/legacy/archive/desktop/data/**

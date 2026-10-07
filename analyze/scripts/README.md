@@ -33,4 +33,4 @@
 
 頁面開啟 eclassa，API 請求則使用擷取檔中的 `https://eclass.yuntech.edu.tw`、GET 與 X-SESSION-ID。eclassa 的 API 路徑目前收到 HTML，不能直接把頁面 Host 當成 API Host。回應不是 JSON 時，腳本會顯示 URL、狀態碼、Content-Type 與重新導向資訊；Session 是否有效仍需實際執行確認。`/exams` 是測驗設定端點，完整流程目前使用含繳交摘要的 `/exam-list`。
 
-舊版腳本保留於 `archive/desktop/scripts/`。Token 在本機手動填入，提交前清空。
+舊版腳本保留於 `legacy/archive/desktop/scripts/`。Token 在本機手動填入，提交前清空。

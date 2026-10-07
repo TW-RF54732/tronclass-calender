@@ -1,6 +1,8 @@
 # API 分析
 
-整理 TronClass PC 與 mobile 的 API 擷取，比較 JSON 結構與值，記錄對日曆工具的影響。
+整理 TronClass PC 與 mobile 的 API 擷取、逆向結論及可用示範，供新版 `service/` 開發參考。
+
+[**scripts/：逆向後可用的 API 示範**](scripts/README.md) 是本區的重要開發參考，包含單端點請求及完整資料流程；請依腳本說明確認認證與尚未驗證的限制。
 
 ## 目錄
 
@@ -8,7 +10,7 @@
 - `reports/`：比較報告、格式化 JSON 與欄位結構。(棄用，資料摘要於notes)
 - `notes/`：分析結論與研究筆記。
 - `compare.py`：JSON 比較工具，只需 Python 3。
-- [scripts/](scripts/README.md)：使用 eclassa URL 與手動 X-SESSION-ID 的 API 請求腳本。
+- [scripts/](scripts/README.md)：逆向後可用的瀏覽器 API 示範，使用手動 X-SESSION-ID。
 
 ## 分析筆記
 

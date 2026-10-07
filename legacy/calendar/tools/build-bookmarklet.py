@@ -57,7 +57,7 @@ def build(output, version, include_tags=False):
                 print(f"Skip unsupported tag name: {tag}")
                 continue
             # 尚未有 bookmarklet.js 的早期 tag 不列為可安裝版本。
-            paths = ("services/calendar/src/bookmarklet.js", "bookmarklet.js")
+            paths = ("legacy/calendar/src/bookmarklet.js", "services/calendar/src/bookmarklet.js", "bookmarklet.js")
             files = git("ls-tree", "-r", "--name-only", tag, *paths).splitlines()
             source_path = next((path for path in paths if path in files), None)
             if source_path is None:

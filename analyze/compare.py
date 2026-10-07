@@ -121,8 +121,8 @@ def write_json(path, value):
 
 def main():
     parser = argparse.ArgumentParser(description='整理並比較大型 JSON，支援 HTTP 記錄')
-    parser.add_argument('left', nargs='?', type=Path, default=Path(__file__).parent / 'captures' / 'PC')
-    parser.add_argument('right', nargs='?', type=Path, default=Path(__file__).parent / 'captures' / 'mobile')
+    parser.add_argument('left', nargs='?', type=Path, default=Path(__file__).resolve().parent / 'captures' / 'get_courses' / 'PC')
+    parser.add_argument('right', nargs='?', type=Path, default=Path(__file__).resolve().parent / 'captures' / 'get_courses' / 'mobile')
     parser.add_argument('--out', type=Path, default=Path(__file__).parent / 'reports')
     parser.add_argument('--match-key', default='id', help='物件陣列配對欄位，預設 id')
     args = parser.parse_args()
