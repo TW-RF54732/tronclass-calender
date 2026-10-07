@@ -14,6 +14,7 @@
 - [課程列表](notes/get-courses-api-comparison.md)
 - [課程活動](notes/get-activities-api-comparison.md)
 - [測驗列表與設定](notes/get-exams-api-comparison.md)
+- [請求標頭結構比較](notes/request-headers-comparison.md)
 - [研究紀錄](notes/research-log.md)
 
 ## 比較 JSON
