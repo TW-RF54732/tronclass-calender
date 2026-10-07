@@ -1,33 +1,34 @@
-# API JSON 比較
+# API 分析
 
-在專案根目錄執行（只需 Python 3，不需額外套件）：
+整理 TronClass PC 與 mobile 的 API 擷取，比較 JSON 結構與值，記錄對日曆工具的影響。
+
+## 目錄
+
+- `captures/`：原始 HTTP 與 JSON 擷取，依 API 分組。
+- `reports/`：比較報告、格式化 JSON 與欄位結構。(棄用，資料摘要於notes)
+- `notes/`：分析結論與研究筆記。
+- `compare.py`：JSON 比較工具，只需 Python 3。
+
+## 分析筆記
+
+- [課程列表](notes/get-courses-api-comparison.md)
+- [課程活動](notes/get-activities-api-comparison.md)
+- [測驗列表與設定](notes/get-exams-api-comparison.md)
+- [研究紀錄](notes/research-log.md)
+
+## 比較 JSON
+
+在專案根目錄執行，例如比較測驗列表：
 
 ```bash
-python3 analyze/compare.py
+python3 analyze/compare.py \
+  analyze/captures/get_exams/PC.txt \
+  analyze/captures/get_exams/mobile.txt \
+  --out analyze/reports/get_exams
 ```
 
-預設讀取 `analyze/captures/PC` 與 `analyze/captures/mobile`，保留原始檔，將結果寫入 `analyze/reports/`：
+先看輸出目錄的 `summary.md`；完整差異在 `diff.json`，縮排資料與欄位結構分別在 `*.pretty.json`、`*.schema.json`。
 
-- `summary.md`：先看欄位結構差異，再看各筆資料的差異預覽。
-- `left.pretty.json` / `right.pretty.json`：完整縮排 JSON。
-- `left.schema.json` / `right.schema.json`：欄位路徑、實際出現的型別與次數；陣列元素合併成 `[]`，可查看大型資料的結構。
-- `diff.json`：完整差異值，分類為左側獨有、右側獨有、型別改變、值改變。
+工具支援純 JSON 與含 JSON body 的 HTTP 記錄；物件陣列以唯一 `id` 配對，其他陣列依索引比較。相同輸出目錄會覆寫報告，要保留不同批次請更換 `--out`。
 
-比較其他檔案：
-
-```bash
-python3 analyze/compare.py a.json b.json --out /tmp/api-comparison
-python3 analyze/compare.py a.json b.json --match-key course_code
-```
-
-支援純 JSON、以 `Requested:` 標示 JSON 的記錄，以及 HTTP headers 後接 JSON body 的文字。工具只分析 JSON payload，不會重送 API 請求或複製 HTTP headers 到報告。若記錄包含多個 payload，請先拆成各自的檔案。
-
-物件陣列的所有元素都有唯一 `id` 時，以 `id` 配對並忽略排列順序；其他陣列依索引比較。`--match-key` 可替換配對欄位。欄位缺少與 `null` 會分開處理。結構報告的出現次數是全資料的累計次數，不代表欄位是必填；型別也只反映目前樣本，不是 API 的正式 schema。
-
-原始檔包含驗證資訊，JSON 及報告也可能包含個人資料；分享前請先移除敏感內容。
-
-## 保留研究紀錄
-
-原始檔放在 `captures/`，判讀筆記放在 `notes/`。既有報告已保留；預設執行會覆寫同名報告，請以 `--out analyze/reports/<日期或批次>` 保存每次比較。
-
-舊版測試與資料見 `../archive/desktop/`；日曆及網站服務見 `../services/calendar/`。
+原始擷取與報告由 Git 忽略，可能含驗證資訊及個資；可提交的分析結論放在 `notes/`。
