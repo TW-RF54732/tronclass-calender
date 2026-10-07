@@ -17,6 +17,18 @@
 
 ## 單一請求
 
+每個分析中的 API 都有獨立腳本，填入開頭 const 即可直接貼到 Console 執行：
+
+| 腳本 | API | 需填入 |
+|---|---|---|
+| [mobile-get-courses.js](mobile-get-courses.js) | GET `/api/users/{USER_ID}/courses` | X_SESSION_ID、USER_ID |
+| [mobile-get-activities.js](mobile-get-activities.js) | GET `/api/courses/{COURSE_ID}/activities` | X_SESSION_ID、COURSE_ID |
+| [mobile-get-exam-list.js](mobile-get-exam-list.js) | GET `/api/courses/{COURSE_ID}/exam-list` | X_SESSION_ID、COURSE_ID |
+| [mobile-get-exams.js](mobile-get-exams.js) | GET `/api/courses/{COURSE_ID}/exams` | X_SESSION_ID、COURSE_ID |
+| [mobile-my-courses.js](mobile-my-courses.js) | POST `/api/my-courses` | X_SESSION_ID |
+
+單支腳本顯示縮排 JSON 並回傳完整物件；有分頁的端點以 PAGE/PAGE_SIZE 指定單頁。my-courses 是分析中的 PC 端點，這支提供使用手機版 Session header 的版本，尚未驗證此端點接受 X-SESSION-ID；手機版完整流程使用 users/{USER_ID}/courses。
+
 [api-requests.js](api-requests.js) 可選擇 courses、activities、exam-list 或 exams。填入 X_SESSION_ID；courses 另填 USER_ID，其餘填 COURSE_ID。列表以 PAGE/PAGE_SIZE 控制單頁。
 
 頁面開啟 eclassa，API 請求則使用擷取檔中的 `https://eclass.yuntech.edu.tw`、GET 與 X-SESSION-ID。eclassa 的 API 路徑目前收到 HTML，不能直接把頁面 Host 當成 API Host。回應不是 JSON 時，腳本會顯示 URL、狀態碼、Content-Type 與重新導向資訊；Session 是否有效仍需實際執行確認。`/exams` 是測驗設定端點，完整流程目前使用含繳交摘要的 `/exam-list`。
