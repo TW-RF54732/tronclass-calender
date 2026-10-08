@@ -11,7 +11,7 @@ from urllib.parse import quote
 BOOKMARKLET = Path(__file__).resolve().parents[1]
 ROOT = BOOKMARKLET.parent
 TEMPLATE = (BOOKMARKLET / "templates/site-template.html").read_text(encoding="utf-8")
-TAG_PATTERN = re.compile(r"v[A-Za-z0-9._-]*\Z")
+TAG_PATTERN = re.compile(r"(?:bookmarklet-)?v[A-Za-z0-9._-]*\Z")
 
 
 def git(*args):
@@ -47,12 +47,12 @@ def write_page(output, source, version, releases, prefix=""):
 
 def build(output, version, include_tags=False):
     if version != "開發版" and not TAG_PATTERN.fullmatch(version):
-        raise ValueError("版本 tag 請使用 v 開頭的英文、數字、句點、底線或連字號，例如 v1.0.0")
+        raise ValueError("版本 tag 請使用 bookmarklet-v 或 v 開頭的英文、數字、句點、底線或連字號，例如 bookmarklet-v1.0.0")
     source = (BOOKMARKLET / "src/bookmarklet.js").read_text(encoding="utf-8")
     releases = []
     snapshots = {}
     if include_tags:
-        for tag in git("tag", "--list", "v*", "--sort=-version:refname").splitlines():
+        for tag in git("tag", "--list", "bookmarklet-v*", "v*", "--sort=-version:refname").splitlines():
             if not TAG_PATTERN.fullmatch(tag):
                 print(f"Skip unsupported tag name: {tag}")
                 continue

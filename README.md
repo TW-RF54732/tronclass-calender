@@ -28,4 +28,11 @@ uv run python analyze/elcassa/format_json.py
 
 Python 3.12 與 `.venv` 由根目錄的 uv 設定統一管理；API 示範直接在瀏覽器 Console 執行。不同研究批次請使用不同輸出目錄，避免覆寫報告。
 
-GitHub Pages 使用 `v*` tag 觸發，以 `bookmarklet/tools/build-bookmarklet.py` 建置安裝網站；建置工具保留歷史 tag 原始碼路徑的支援。本機擷取、報告、環境檔與憑證不提交。
+GitHub Pages 使用 `bookmarklet-v*` tag 觸發（相容舊 `v*` tags），以 `bookmarklet/tools/build-bookmarklet.py` 建置安裝網站；建置工具保留歷史 tag 原始碼路徑的支援。本機擷取、報告、環境檔與憑證不提交。
+
+## 版本發布
+
+- `bookmarklet-v1.3.0`：建置 bookmarklet 安裝網站並發布 GitHub Pages。
+- `service-v1.0.0`：執行型別檢查、Workers 測試、dry-run 建置與瀏覽器測試，全部成功後部署 Cloudflare。
+
+兩條流程互相獨立。Cloudflare 的初次帳號、API token 與 Secrets 設定見 [服務部署說明](service/README.md#github-actions-tag-部署)。

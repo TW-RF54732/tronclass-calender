@@ -3,7 +3,8 @@ name: Publish bookmarklet website
 on:
   push:
     tags:
-      - 'v*'
+      - 'bookmarklet-v*'
+      - 'v*' # Legacy bookmarklet releases
 
 permissions:
   contents: read

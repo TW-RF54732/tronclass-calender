@@ -48,6 +48,30 @@ Wrangler 會建立 `CalendarStore` 的 `v1` migration，`new_sqlite_classes` 必
 
 `wrangler.jsonc` 的 `POLL_INTERVAL_MINUTES` 預設 `30`，需為至少 5 且是 5 的倍數。Cron 固定 `*/5 * * * *`，只判斷到期，不直接抓完所有課程。修改 vars 後重新部署。compatibility date 使用 `2026-08-15`，與目前 Workers Vitest runtime 共同支援的日期一致。
 
+## GitHub Actions tag 部署
+
+工作流程位於 `.github/workflows/service.yml`，推送 `service-v*` tag 後，先執行 `npm ci`、型別檢查、Workers 測試、dry-run 建置及 Chromium 瀏覽器測試；全部成功才部署該 tag 的程式。`bookmarklet-v*` 和舊 `v*` tags 只發布 bookmarklet，不部署服務。
+
+首次使用請在 GitHub 的 Settings → Environments 建立 `cloudflare-production`；若設定部署 tag 限制，允許 `service-v*`。在此 environment 的 Secrets 設定：
+
+| GitHub Secret | 用途 |
+| --- | --- |
+| `CLOUDFLARE_API_TOKEN` | Cloudflare 的 Edit Cloudflare Workers API token，授權目標帳號部署 Worker |
+| `CLOUDFLARE_ACCOUNT_ID` | 目標 Cloudflare 帳號 ID |
+
+四個應用 Secrets（`TRONCLASS_SESSION_ID`、`TRONCLASS_USER_ID`、`WEB_ACCESS_KEY`、`CALENDAR_TOKEN`）沿用 Cloudflare 既有設定，不由此 workflow 上傳。首次發布可先用上面的手動部署步驟建立 Worker 並設定 Secrets，再改用 tag 發布；若直接以 tag 建立 Worker，須隨後手動設定四個 Secrets 才能使用。Session 更新仍使用 `wrangler secret put` 或 Cloudflare dashboard。
+
+先提交及推送工作流程與程式，再發布新版本：
+
+```sh
+git tag service-v1.0.0
+git push origin service-v1.0.0
+```
+
+每個 tag 都部署到 `wrangler.jsonc` 中同一個 `tronclass-calendar` Worker，包含靜態網頁、Durable Object migrations 與 Cron。發布舊程式碼會覆蓋目前服務；請使用新的版本號。GitHub Actions 的正式執行與雲端部署需要上述帳號設定，本機 dry-run 不會建立雲端資源。
+
+參考 [Cloudflare GitHub Actions 部署文件](https://developers.cloudflare.com/workers/ci-cd/external-cicd/github-actions/)。
+
 ## 同步與故障判讀
 
 使用一個固定名稱的 SQLite Durable Object，所有 Cron 和手動同步共用同一份持久化工作。資料表分為工作、分頁暫存、已發布課程／活動、事件版本及來源狀態。每頁用 SQLite 交易保存結果與下一頁游標；alarm 最多執行 40 個上游請求，且每批經過 60 秒便停止接新請求，每次請求（含讀取 JSON）30 秒逾時。這避免最壞的 40 × 30 秒超過 alarm 的 15 分鐘限制。下一批以 alarm 續跑，Cron 也能補回意外缺少的 alarm；重複 alarm 不會重複發布已完成工作。
