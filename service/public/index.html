@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>TronClass 個人行事曆</title>
+  <link rel="stylesheet" href="/styles.css">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <main>
+    <header class="site-header"><div class="brand"><div class="brand-mark" aria-hidden="true">TC<span></span></div><div><p class="eyebrow">TRONCLASS / PERSONAL CALENDAR</p><h1>我的課程行事曆</h1><p class="muted">活動、作業與測驗，集中在同一處。</p></div></div><button id="logout" hidden>登出</button></header>
+    <p id="message" role="status" aria-live="polite"></p>
+    <section id="login-panel" class="panel" hidden>
+      <h2>登入個人行事曆</h2><p>輸入部署時設定的網頁密鑰。</p>
+      <form id="login"><label for="key">網頁密鑰</label><input id="key" type="password" autocomplete="current-password" required><button class="primary" type="submit">登入</button></form>
+    </section>
+    <div id="dashboard" hidden>
+      <section class="workspace" aria-labelledby="view-title">
+        <div class="view-header"><div><p class="eyebrow">YOUR SCHEDULE</p><h2 id="view-title">課程月曆</h2></div><div class="view-switch" role="group" aria-label="活動檢視"><button id="view-calendar" aria-pressed="true">月曆</button><button id="view-list" aria-pressed="false">列表</button></div></div>
+        <div class="row view-caption"><p class="muted">台灣時間 · 包含所有活動狀態</p><span id="count" class="muted"></span></div>
+        <div id="calendar-view">
+          <section class="calendar panel" aria-label="月份行事曆">
+            <div class="month-toolbar"><h3 id="month-title" aria-live="polite"></h3><div class="month-nav"><button id="previous-month" aria-label="上一個月">‹</button><button id="today">今天</button><button id="next-month" aria-label="下一個月">›</button></div></div>
+            <div class="weekdays" aria-hidden="true"><span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span></div>
+            <div id="month-grid" class="month-grid"></div>
+            <p class="calendar-hint muted">點選日期查看當日活動，點選活動開啟詳細資料。</p>
+          </section>
+          <section class="agenda panel" aria-labelledby="day-title"><div class="row"><h3 id="day-title"></h3><span id="day-count" class="muted"></span></div><div id="day-activities"></div></section>
+          <section id="untimed-panel" class="panel" hidden><div class="row"><h3>未排入月曆</h3><span id="untimed-count" class="muted"></span></div><p class="muted">沒有有效活動時間的項目，仍可查看詳細資料。</p><div id="untimed-activities"></div></section>
+        </div>
+        <div id="list-view" hidden><p class="muted">包含已結束、已繳交與無時間的活動。</p><div id="activities"></div></div>
+      </section>
+      <aside class="sidebar" aria-label="篩選與服務設定">
+      <details class="sidebar-group" open><summary>篩選活動</summary>
+      <section class="panel filters"><div class="row"><h2>選擇活動</h2><button id="reset">全選</button></div>
+        <label for="search">搜尋標題或課程</label><input id="search" type="search" placeholder="搜尋活動…">
+        <fieldset><legend>課程</legend><div id="courses" class="choices"></div></fieldset>
+        <fieldset><legend>類型</legend><div id="types" class="choices"></div></fieldset>
+      </section>
+      </details>
+      <section class="panel sync-panel"><div class="row"><h2><span class="status-dot" aria-hidden="true"></span>同步狀態</h2><button id="sync">立即同步</button></div><p id="status" aria-live="polite">讀取中…</p><details class="source-details"><summary>來源與更新紀錄</summary><div id="sources"></div></details></section>
+      <section class="panel subscription"><h2>訂閱到手機行事曆</h2><p class="muted">網址固定保存目前勾選的課程與類型。搜尋只影響活動顯示。手機更新頻率由行事曆 App 決定。</p>
+        <label for="subscription">HTTPS 訂閱網址</label><input id="subscription" readonly type="url"><div class="row"><button id="copy">複製網址</button><a id="webcal" class="button" href="#">開啟行事曆訂閱 ↗</a></div>
+      </section>
+      </aside>
+    </div>
+  </main>
+  <dialog id="activity-dialog" aria-labelledby="detail-title"><div class="row dialog-header"><p class="eyebrow">ACTIVITY DETAILS</p><button id="close-detail" aria-label="關閉活動詳情">✕</button></div><h2 id="detail-title"></h2><div id="detail-content"></div></dialog>
+</body>
+</html>

@@ -1,0 +1,12 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tronclass-calendar",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-08-15",
+  "assets": { "directory": "./public", "binding": "ASSETS", "run_worker_first": true },
+  "durable_objects": { "bindings": [{ "name": "CALENDAR", "class_name": "CalendarStore" }] },
+  "migrations": [{ "tag": "v1", "new_sqlite_classes": ["CalendarStore"] }],
+  "triggers": { "crons": ["*/5 * * * *"] },
+  "vars": { "POLL_INTERVAL_MINUTES": "30" },
+  "observability": { "enabled": false }
+}

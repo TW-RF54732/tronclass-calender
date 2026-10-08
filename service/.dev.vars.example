@@ -1,0 +1,4 @@
+TRONCLASS_SESSION_ID="replace-with-mobile-session-id"
+TRONCLASS_USER_ID="12345"
+WEB_ACCESS_KEY="replace-with-an-independent-random-key"
+CALENDAR_TOKEN="replace-with-another-random-url-safe-token"
