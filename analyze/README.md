@@ -1,19 +1,25 @@
 # API 分析
 
-整理 TronClass PC 與 mobile 的 API 擷取、逆向結論及可用示範，供新版 `service/` 開發參考。
+整理 TronClass PC 與 mobile 的 API 擷取、逆向結論及可用示範，供 bookmarklet 與 service 開發參考。
 
-[**scripts/：逆向後可用的 API 示範**](elcassa/scripts/README.md) 是本區的重要開發參考，包含單端點請求及完整資料流程；請依腳本說明確認認證與尚未驗證的限制。
+[手機 API 示範](elcassa/scripts/README.md) 是本區的重要開發參考，包含單端點請求及完整資料流程；請依腳本說明確認認證與尚未驗證的限制。
 
 ## 目錄
 
-- `eclass/`：桌面平台的探測腳本與分析筆記。
-- `elcassa/`：手機 API 研究；以下目錄與工具均位於此處。
+| 路徑 | 內容 |
+| --- | --- |
+| `eclass/scripts/` | 桌面平台探測腳本 |
+| `eclass/notes/` | 桌面平台分析筆記 |
+| [elcassa/scripts/](elcassa/scripts/README.md) | 手機 API 示範，使用手動 X-SESSION-ID |
+| `elcassa/notes/` | API 比較結論與研究紀錄 |
+| `elcassa/captures/` | 本機原始 HTTP 與 JSON 擷取 |
+| `elcassa/reports/` | 本機衍生報告；研究摘要以 notes 為主 |
+| `elcassa/compare.py` | JSON 比較工具 |
+| `elcassa/format_json.py` | JSON 格式化工具 |
 
-- `captures/`：原始 HTTP 與 JSON 擷取，依 API 分組。
-- `reports/`：比較報告、格式化 JSON 與欄位結構。(棄用，資料摘要於notes)
-- `notes/`：分析結論與研究筆記。
-- `compare.py`：JSON 比較工具，只需 Python 3。
-- [scripts/](elcassa/scripts/README.md)：逆向後可用的瀏覽器 API 示範，使用手動 X-SESSION-ID。
+## 研究環境
+
+在專案根目錄執行 `uv sync`，使用 Python 3.12 與根目錄的 `.venv`。API 示範直接貼到瀏覽器 Console 執行。
 
 ## 分析筆記
 
@@ -28,7 +34,7 @@
 在專案根目錄執行，例如比較測驗列表：
 
 ```bash
-python3 analyze/elcassa/compare.py \
+uv run python analyze/elcassa/compare.py \
   analyze/elcassa/captures/get_exams/PC.txt \
   analyze/elcassa/captures/get_exams/mobile.txt \
   --out analyze/elcassa/reports/get_exams
@@ -38,4 +44,10 @@ python3 analyze/elcassa/compare.py \
 
 工具支援純 JSON 與含 JSON body 的 HTTP 記錄；物件陣列以唯一 `id` 配對，其他陣列依索引比較。相同輸出目錄會覆寫報告，要保留不同批次請更換 `--out`。
 
-原始擷取與報告由 Git 忽略，可能含驗證資訊及個資；可提交的分析結論放在 `notes/`。
+原始擷取與報告由 Git 忽略，可能含驗證資訊及個資；可提交的分析結論放在各研究目錄的 `notes/`。
+
+格式化 JSON：
+
+```sh
+uv run python analyze/elcassa/format_json.py
+```

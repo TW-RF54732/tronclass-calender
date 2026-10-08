@@ -1,38 +1,34 @@
-# TronClass
+# TronClass 課程行事曆
 
-同一個版本庫包含 Cloudflare 服務、持續維護的 bookmarklet，以及 API 研究資料。
+把雲科 TronClass 的課程活動與測驗整理成列表及月曆，方便查看開始時間、截止時間與活動詳情。
 
-```text
-service/                Cloudflare Workers 個人行事曆訂閱服務
-bookmarklet/            日曆 bookmarklet、userscript 與安裝網站
-  src/                  原始碼
-  templates/            安裝頁模板
-  public/               產生的靜態安裝頁
-  tools/                建置與歷史版本發布工具
-analyze/                研究資料與逆向成果
-  eclass/               桌面平台探測腳本與筆記
-  elcassa/              手機 API 腳本、筆記、比較工具與本機資料
-```
+## 推薦：Bookmarklet
 
-[Cloudflare 服務](service/README.md) 提供活動網頁、定期同步與 ICS 訂閱，由使用者自行配置及部署。[Bookmarklet](bookmarklet/README.md) 持續維護與發布，在已登入的 TronClass 網頁中執行，另包含 userscript。
+想直接查看課程活動，推薦先使用 bookmarklet。在已登入的 TronClass 網頁點一下書籤，就能開啟活動列表與月曆，不需要自行部署服務。
 
-[API 示範](analyze/elcassa/scripts/README.md) 包含單端點請求與「課程 → 活動 → 測驗」完整流程，供服務開發參考。[研究導覽](analyze/README.md) 彙整筆記與工具用法。
+**[前往書籤安裝網站](https://tw-rf54732.github.io/tronclass-calender/)**
 
-## 研究環境
+1. 開啟安裝網站，把「雲科課程活動」拖到瀏覽器書籤列；無法拖曳時可依網站說明手動加入。
+2. 登入 [雲科 TronClass](https://eclass.yuntech.edu.tw)。
+3. 在 TronClass 網頁點擊書籤，查看課程活動與測驗。
 
-```sh
-uv sync
-uv run python analyze/elcassa/compare.py analyze/elcassa/captures/get_courses/PC analyze/elcassa/captures/get_courses/mobile --out analyze/elcassa/reports/new-comparison
-uv run python analyze/elcassa/format_json.py
-```
+支援課程與活動類型篩選、關鍵字搜尋、列表／月曆切換，以及活動詳情。資料在使用時從目前登入的帳號讀取，也可按「重新整理」更新。
 
-Python 3.12 與 `.venv` 由根目錄的 uv 設定統一管理；API 示範直接在瀏覽器 Console 執行。不同研究批次請使用不同輸出目錄，避免覆寫報告。
+[Bookmarklet 使用說明](bookmarklet/README.md)
 
-GitHub Pages 使用 `bookmarklet-v*` tag 觸發（相容舊 `v*` tags），以 `bookmarklet/tools/build-bookmarklet.py` 建置安裝網站；建置工具保留歷史 tag 原始碼路徑的支援。本機擷取、報告、環境檔與憑證不提交。
+## Service：個人行事曆訂閱服務
 
-## 版本發布
+如果希望把活動訂閱到手機行事曆，可以自行部署 `service/` 的 Cloudflare Worker。服務預設每 30 分鐘同步最新學年度的課程活動與測驗，提供活動網頁及 ICS 訂閱網址。
 
-- `bookmarklet-v1.3.0`：建置 bookmarklet 安裝網站並發布 GitHub Pages。
-- `service-v1.0.0`：執行型別檢查、Workers 測試、dry-run 建置與瀏覽器測試，全部成功後部署 Cloudflare。
+需要自己的 Cloudflare 帳號，並手動設定 TronClass Session、使用者 ID、網頁登入密鑰與訂閱 token。Session 過期後需要更新；手機行事曆的更新頻率由訂閱 App 決定。
 
-兩條流程互相獨立。Cloudflare 的初次帳號、API token 與 Secrets 設定見 [服務部署說明](service/README.md#github-actions-tag-部署)。
+[Service 使用與部署說明](service/README.md)
+
+## 開發與研究
+
+- [Bookmarklet 建置與發布](bookmarklet/docs/development.md)：原始碼、安裝頁建置與 GitHub Pages 發布。
+- [Service 開發與驗證](service/README.md#本機開發)：本機環境及測試。
+- [Service 技術參考](service/docs/reference.md)：同步機制、行事曆規則與 HTTP 介面。
+- [API 研究導覽](analyze/README.md)：桌面與手機 API 的分析筆記、示範腳本及比較工具。
+
+Bookmarklet 使用 `bookmarklet-v*` tag 發布安裝網站；Service 使用 `service-v*` tag 通過測試後部署 Cloudflare。各自的設定與發布步驟見上方文件。
