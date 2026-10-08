@@ -20,4 +20,8 @@ node_modules/
 !.dev.vars.example
 *.pem
 *.key
-/legacy/archive/desktop/data/**
+/analyze/eclass/data/**
+
+# 歸檔後的本機擷取與報告
+/analyze/elcassa/captures/**
+/analyze/elcassa/reports/**

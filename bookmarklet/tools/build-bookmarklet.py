@@ -8,9 +8,9 @@ from html import escape
 from pathlib import Path
 from urllib.parse import quote
 
-SERVICE = Path(__file__).resolve().parents[1]
-ROOT = SERVICE.parents[1]
-TEMPLATE = (SERVICE / "templates/site-template.html").read_text(encoding="utf-8")
+BOOKMARKLET = Path(__file__).resolve().parents[1]
+ROOT = BOOKMARKLET.parent
+TEMPLATE = (BOOKMARKLET / "templates/site-template.html").read_text(encoding="utf-8")
 TAG_PATTERN = re.compile(r"v[A-Za-z0-9._-]*\Z")
 
 
@@ -48,7 +48,7 @@ def write_page(output, source, version, releases, prefix=""):
 def build(output, version, include_tags=False):
     if version != "開發版" and not TAG_PATTERN.fullmatch(version):
         raise ValueError("版本 tag 請使用 v 開頭的英文、數字、句點、底線或連字號，例如 v1.0.0")
-    source = (SERVICE / "src/bookmarklet.js").read_text(encoding="utf-8")
+    source = (BOOKMARKLET / "src/bookmarklet.js").read_text(encoding="utf-8")
     releases = []
     snapshots = {}
     if include_tags:
@@ -57,7 +57,7 @@ def build(output, version, include_tags=False):
                 print(f"Skip unsupported tag name: {tag}")
                 continue
             # 尚未有 bookmarklet.js 的早期 tag 不列為可安裝版本。
-            paths = ("legacy/calendar/src/bookmarklet.js", "services/calendar/src/bookmarklet.js", "bookmarklet.js")
+            paths = ("bookmarklet/src/bookmarklet.js", "legacy/calendar/src/bookmarklet.js", "services/calendar/src/bookmarklet.js", "bookmarklet.js")
             files = git("ls-tree", "-r", "--name-only", tag, *paths).splitlines()
             source_path = next((path for path in paths if path in files), None)
             if source_path is None:
@@ -90,7 +90,7 @@ def build(output, version, include_tags=False):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--output", type=Path, default=SERVICE / "public")
+    parser.add_argument("--output", type=Path, default=BOOKMARKLET / "public")
     parser.add_argument("--version", default="開發版")
     parser.add_argument("--include-tags", action="store_true")
     args = parser.parse_args()
